@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
-from utils import  Block
+from model_utils import  Block
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
