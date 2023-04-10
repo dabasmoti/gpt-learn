@@ -30,9 +30,9 @@ def build_dataset(words):
   print(X.shape, Y.shape)
   return X, Y
 
-import random
-random.seed(42)
-random.shuffle(words)
+# import random
+# random.seed(42)
+# random.shuffle(words)
 n1 = int(0.8*len(words))
 n2 = int(0.9*len(words))
 
