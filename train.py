@@ -1,14 +1,25 @@
 import torch
-from model import BigramLanguageModel
-from data_utils import get_batch, decode, device, vocab_size, train_data, val_data, itos, stoi, encode, text, chars
-
+from model import Gpt
+from data_utils import (
+    get_batch,
+    decode,
+    device,
+    vocab_size,
+    train_data,
+    val_data,
+    itos,
+    stoi,
+    encode,
+    text,
+    chars,
+)
 
 
 @torch.no_grad()
 def estimate_loss():
     out = {}
     model.eval()
-    for split in ['train', 'val']:
+    for split in ["train", "val"]:
         losses = torch.zeros(eval_iters)
         for k in range(eval_iters):
             X, Y = get_batch(split)
@@ -18,10 +29,11 @@ def estimate_loss():
     model.train()
     return out
 
+
 if __name__ == "__main__":
     # hyperparameters
-    batch_size = 16 # how many independent sequences will we process in parallel?
-    block_size = 32 # what is the maximum context length for predictions?
+    batch_size = 16  # how many independent sequences will we process in parallel?
+    block_size = 32  # what is the maximum context length for predictions?
     max_iters = 5000
     eval_interval = 100
     learning_rate = 1e-3
@@ -32,9 +44,9 @@ if __name__ == "__main__":
     dropout = 0.0
     # ------------
     torch.manual_seed(1337)
-    model = BigramLanguageModel(vocab_size, n_embd, n_layer, n_head, block_size, dropout).to(device)
+    model = Gpt(vocab_size, n_embd, n_layer, n_head, block_size, dropout).to(device)
     # train model
-    print(sum(p.numel() for p in model.parameters())/1e6, 'M parameters')
+    print(sum(p.numel() for p in model.parameters()) / 1e6, "M parameters")
 
     # create a PyTorch optimizer
     optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
@@ -42,13 +54,14 @@ if __name__ == "__main__":
         # every once in a while evaluate the loss on train and val sets
         if i % eval_interval == 0 or iter == max_iters - 1:
             losses = estimate_loss()
-            print(f"step {i}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
+            print(
+                f"step {i}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}"
+            )
         # sample a batch of data
-        xb, yb = get_batch('train')
+        xb, yb = get_batch("train")
 
         # evaluate the loss
         logits, loss = model(xb, yb)
         optimizer.zero_grad(set_to_none=True)
         loss.backward()
         optimizer.step()
-        
