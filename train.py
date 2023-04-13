@@ -2,16 +2,8 @@ import torch
 from model import Gpt
 from data_utils import (
     get_batch,
-    decode,
     device,
     vocab_size,
-    train_data,
-    val_data,
-    itos,
-    stoi,
-    encode,
-    text,
-    chars,
 )
 
 
